@@ -1,0 +1,22 @@
+[
+	{
+		"id": 1,
+		"title": "Producto A",
+		"status": true,
+		"stock": 10,
+		"code":"A01",
+		"description":"Zapatos Nike Blanco y Gris",
+		"price":70.99,
+		"thumbnail": "file-custom-nike-dunk-low-by-you-su24.png"
+	},
+	{
+		"id": 2,
+		"title": "Producto B",
+		"status": true,
+		"stock": 15,
+		"code":"A02",
+		"description":"Zapatos Nike Blanco y Celeste",
+		"price":50.99,
+		"thumbnail": "file-NIKE-DUNK-LOW-RETRO.png"
+	}
+]
