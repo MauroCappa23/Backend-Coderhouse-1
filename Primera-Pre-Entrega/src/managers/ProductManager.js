@@ -53,9 +53,9 @@ export default class ProductManager {
                 throw new ErrorManager("Faltan datos obligatorios", 400);
             }
 
-            if (!file?.filename) {
+            /*if (!file?.filename) {
                 throw new ErrorManager("Falta el archivo de la imagen", 400);
-            }
+            }*/
 
             const product = {
                 id: generateId(await this.getAll()),
@@ -65,7 +65,7 @@ export default class ProductManager {
                 code,
                 description,
                 price: Number(price),
-                thumbnail: file?.filename,
+                thumbnail,
             };
 
             this.#products.push(product);
@@ -73,7 +73,7 @@ export default class ProductManager {
 
             return product;
         } catch (error) {
-            if (file?.filename) await deleteFile(paths.img, file.filename);
+            /*if (file?.filename) await deleteFile(paths.img, file.filename);*/
             throw new ErrorManager(error.message, error.code);
         }
     }
@@ -117,15 +117,24 @@ export default class ProductManager {
         try {
             const productFound = await this.#findOneById(id);
 
-            // Si tiene thumbnail definido, entonces elimina la imagen del producto
-            if (productFound.thumbnail) {
-                await deleteFile(paths.img, productFound.thumbnail);
+            if (!productFound) {
+                throw new Error("ID no encontrado", 404);               
             }
+            // Si tiene thumbnail definido, entonces elimina la imagen del producto
+            /*if (productFound.thumbnail) {
+                await deleteFile(paths.img, productFound.thumbnail);
+            }*/
 
             const index = this.#products.findIndex((item) => item.id === Number(id));
-            this.#products.splice(index, 1);
-            await writeJsonFile(paths.files, this.#jsonFilename, this.#products);
-        } catch (error) {
+            if(index >=0) {
+                this.#products.splice(index, 1);
+                await writeJsonFile(paths.files, this.#jsonFilename, this.#products);
+        } else {
+            throw new Error("Producto no encontrado", 404);
+            
+        }
+    }
+        catch (error) {
             throw new ErrorManager(error.message, error.code);
         }
     }

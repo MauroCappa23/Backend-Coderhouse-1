@@ -27,10 +27,7 @@ export default class CartManager {
     async getAll() {
         try {
             this.#carts = await readJsonFile(paths.files, this.#jsonFilename);
-            return this.#carts.map(cart => ({
-                id: cart.id,
-                products: cart.products.map(({ product, quantity }) => ({ product, quantity }))
-            }));
+            return this.#carts;
         } catch (error) {
             throw new ErrorManager(error.message, error.code);
         }
@@ -40,10 +37,7 @@ export default class CartManager {
     async getOneById(id) {
         try {
             const cartFound = await this.#findOneById(id);
-            return {
-                id: cartFound.id,
-                products: cartFound.products.map(({ product, quantity }) => ({ product, quantity }))
-            };
+            return cartFound;
         } catch (error) {
             throw new ErrorManager(error.message, error.code);
         }
