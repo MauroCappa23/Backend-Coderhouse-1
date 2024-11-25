@@ -2,9 +2,12 @@
     box-sizing: border-box;
 }
 
-h1 {
-    color: brown;
+header {
+    color: rgb(27, 115, 174);
+    display: flex;
+    justify-self: center;
 }
+
 
 .error404 {
     width: 100%;
@@ -15,4 +18,28 @@ h1 {
 
 .error404 img {
     width: 400px;
+}
+
+form {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: whitesmoke;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .form{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .form-title{
+    align-self: center;
+  }
+
+.error-message{
+    color: red;
 }

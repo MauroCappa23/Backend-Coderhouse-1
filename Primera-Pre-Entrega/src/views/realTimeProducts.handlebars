@@ -1,5 +1,5 @@
 <header>
-    <h1>Home - Real Time Products</h1>
+    <h1 class="title">Home - Real Time Products</h1>
 </header>
 
 <main>
@@ -10,8 +10,8 @@
         </div>
     </section>
 
-    <section>
-        <h3>Form of Products</h3>
+    <section class="form">
+        <h3 class="form-title">Form of Products</h3>
         <form id="product-form">
             <input type="text" name="title" placeholder="Add product name">
             <div>Is active? <input type="checkbox" name="status"></div>
@@ -32,7 +32,7 @@
         </div>
     </section>
 
-    <p id="error-message" style="color: red;"></p>
+    <p class="error-message" id="error-message"></p>
 </main>
 
 <script src="/socket.io/socket.io.js"></script>
