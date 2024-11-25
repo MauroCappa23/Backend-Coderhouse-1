@@ -65,7 +65,7 @@ export default class ProductManager {
                 code,
                 description,
                 price: Number(price),
-                thumbnail,
+                thumbnail: file?.filename ?? null,
             };
 
             this.#products.push(product);

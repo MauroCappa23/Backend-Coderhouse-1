@@ -10,13 +10,13 @@
 		"thumbnail": "file-NIKE-DUNK-LOW-RETRO.png"
 	},
 	{
-		"id": 3,
-		"title": "Producto C",
-		"status": true,
-		"stock": 35,
-		"code": "A03",
-		"description": "Zapatos Nike Deportivo Azul Oscuro",
-		"price": 30.99,
+		"id": 4,
+		"title": "Zapato Nike",
+		"status": false,
+		"stock": 10,
+		"code": "A04",
+		"description": "Zapatos Nike rojos con negro",
+		"price": 55,
 		"thumbnail": null
 	}
 ]
