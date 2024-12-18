@@ -1,88 +1,81 @@
-import paths from "../utils/paths.js";
-import { readJsonFile, writeJsonFile } from "../utils/fileHandler.js";
-import { generateId } from "../utils/collectionHandler.js";
 import ErrorManager from "./ErrorManager.js";
+import { isValidID } from "../config/mongoose.config.js";
+import CartModel from "../models/cart.models.js";
 
 export default class CartManager {
-    #jsonFilename;
-    #carts;
+    #cartModel;
 
     constructor() {
-        this.#jsonFilename = "carts.json";
+        this.#cartModel = CartModel;
     }
 
-    // Busca un carrito por su ID
+    // Busca una carrito por su ID
     async #findOneById(id) {
-        this.#carts = await this.getAll();
-        const cartFound = this.#carts.find((item) => item.id === Number(id));
+        if (!isValidID(id)) {
+            throw new ErrorManager("ID inválido", 400);
+        }
 
-        if (!cartFound) {
+        const cart = await this.#cartModel.findById(id).populate("products.product");
+
+        if (!cart) {
             throw new ErrorManager("ID no encontrado", 404);
         }
 
-        return cartFound;
+        return cart;
     }
 
     // Obtiene una lista de carritos
-    async getAll() {
+    async getAll(params) {
         try {
-            this.#carts = await readJsonFile(paths.files, this.#jsonFilename);
-            return this.#carts;
-        } catch (error) {
-            throw new ErrorManager(error.message, error.code);
-        }
-    }
-
-    // Obtiene un carrito específico por su ID
-    async getOneById(id) {
-        try {
-            const cartFound = await this.#findOneById(id);
-            return cartFound;
-        } catch (error) {
-            throw new ErrorManager(error.message, error.code);
-        }
-    }
-
-    // Crea un carrito
-    async createOne(data) {
-        try {
-            const products = data?.products?.map((item) => {
-                return { product: Number(item.product), quantity: 1 };
-            });
-
-            const cart = {
-                id: generateId(await this.getAll()),
-                products: products ?? [],
+            const paginationOptions = {
+                limit: params?.limit || 10, // Número de documentos por página (por defecto 10)
+                page: params?.page || 1, // Página actual (por defecto 1)
+                populate: "products.product", // Poblar el campo virtual 'products'
+                lean: true, // Convertir los resultados en objetos planos
             };
 
-            this.#carts.push(cart);
-            await writeJsonFile(paths.files, this.#jsonFilename, this.#carts);
+            return await this.#cartModel.paginate({}, paginationOptions);
+        } catch (error) {
+            throw ErrorManager.handleError(error);
+        }
+    }
+
+    // Obtiene una carrito específico por su ID
+    async getOneById(id) {
+        try {
+            return await this.#findOneById(id);
+        } catch (error) {
+            throw ErrorManager.handleError(error);
+        }
+    }
+
+    // Inserta una carrito
+    async createOne(data) {
+        try {
+            const cart = await this.#cartModel.create(data);
+            return cart;
+        } catch (error) {
+            throw ErrorManager.handleError(error);
+        }
+    }
+
+    // Agrega un producto a una carrito o incrementa la cantidad de un producto existente
+    async addOneProduct(id, productId) {
+        try {
+            const cart = await this.#findOneById(id);
+            const productIndex = cart.products.findIndex((item) => item.product._id.toString() === productId);
+
+            if (productIndex >= 0) {
+                cart.products[productIndex].quantity++;
+            } else {
+                cart.products.push({ product: productId, quantity: 1 });
+            }
+
+            await cart.save();
 
             return cart;
         } catch (error) {
             throw new ErrorManager(error.message, error.code);
         }
     }
-
-    // Agrega un producto a un carrito o incrementa la cantidad de un producto existente
-    addOneProduct = async (id, productId) => {
-        try {
-            const cartFound = await this.#findOneById(id);
-            const productIndex = cartFound.products.findIndex((item) => item.product === Number(productId));
-
-            if (productIndex >= 0) {
-                cartFound.products[productIndex].quantity++;
-            } else {
-                cartFound.products.push({ product: Number(productId), quantity: 1 });
-            }
-
-            const index = this.#carts.findIndex((item) => item.id === Number(id));
-            this.#carts[index] = cartFound;
-            await writeJsonFile(paths.files, this.#jsonFilename, this.#carts);
-
-            return cartFound;
-        } catch (error) {
-            throw new ErrorManager(error.message, error.code);
-        }
-    };
 }

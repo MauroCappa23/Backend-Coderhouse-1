@@ -4,7 +4,7 @@ const btnRefreshList = document.getElementById("btn-refresh-product-list");
 const loadProducts = async () => {
     const response = await fetch("api/products", { method: "GET"});
     const data = await response.json();
-    const products = data.payload;
+    const products = data.payload.docs ?? [];
 
     productList.innerText = "";
 
