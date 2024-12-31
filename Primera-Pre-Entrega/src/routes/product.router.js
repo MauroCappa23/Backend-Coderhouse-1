@@ -34,10 +34,10 @@ router.post("/", async (req, res) => {
     }
 });
 
-// Ruta para actualizar un produto por su ID, permite la subida de imágenes
+// Ruta para actualizar un produto por su ID
 router.put("/:id", async (req, res) => {
     try {
-        const product = await productManager.updateOneById(req.params.id, req.body, req.file);
+        const product = await productManager.updateOneById(req.params.id, req.body);
         res.status(200).json({ status: "success", payload: product });
     } catch (error) {
         res.status(error.code || 500).json({ status: "error", message: error.message });

@@ -2,8 +2,8 @@ import fs from "fs";
 import path from "path";
 
 const validateFileName = (filepath, filename) => {
-    if (!filepath) throw new Error("No se encontro la ruta");
-    if (!filename) throw new Error("No se encontro el nombre");
+    if (!filepath) throw new Error(`La ruta del archivo ${filename} no fue proporcionada.`);
+    if (!filename) throw new Error(`El nombre del archivo ${filename} no fue proporcionado.`);
 }
 
 export const readJsonFile = async (filepath, filename) => {
@@ -12,7 +12,7 @@ export const readJsonFile = async (filepath, filename) => {
         const content = await fs.promises.readFile(path.join(filepath, filename), "utf-8")
         return JSON.parse(content || "[]");
     } catch (err) {
-        throw new Error("Error al leer el archivo");                 
+        throw new Error(`Error al leer el archivo ${filename}`);                 
     }
 }
 

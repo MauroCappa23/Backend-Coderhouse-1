@@ -4,7 +4,7 @@ import CartManager from "../managers/CartManager.js";
 const router = Router();
 const cartManager = new CartManager();
 
-// Ruta para obtener los cartos
+// Ruta para obtener los carritos
 router.get("/", async (req, res) => {
     try {
         const carts = await cartManager.getAll(req.query);
@@ -24,7 +24,7 @@ router.get("/:id", async (req, res) => {
     }
 });
 
-// Ruta para crear un carto, permite la subida de imágenes
+// Ruta para crear un carrito, permite la subida de imágenes
 router.post("/", async (req, res) => {
     try {
         const cart = await cartManager.createOne(req.body);
@@ -34,10 +34,45 @@ router.post("/", async (req, res) => {
     }
 });
 
-// Ruta para actualizar un carto por su ID, permite la subida de imágenes
-router.put("/:id", async (req, res) => {
+// Ruta para agregar un producto específico en un carrito por su ID
+router.post("/:cid/products/:pid", async (req, res) => {
     try {
-        const cart = await cartManager.updateOneById(req.params.id, req.body, req.file);
+        const { cid, pid } = req.params;
+        const cart = await cartManager.addOneProduct(cid, pid);
+        res.status(201).json({ status: "success", payload: cart });
+    } catch (error) {
+        res.status(error.code || 500).json({ status: "error", message: error.message });
+    }
+});
+
+// Ruta para actualizar la cantidad de un producto específico de un carrito por su ID
+router.put("/:cid/products/:iid", async (req, res) => {
+    try {
+        const { cid, iid } = req.params;
+        const { quantity } = req.body;
+        const cart = await cartManager.updateQuantityOfProduct(cid, iid, quantity);
+        res.status(200).json({ status: "success", payload: cart });
+    } catch (error) {
+        res.status(error.code || 500).json({ status: "error", message: error.message });
+    }
+});
+
+// Ruta para quitar un producto específico de un carrito por su ID
+router.delete("/:cid/products/:iid", async (req, res) => {
+    try {
+        const { cid, iid } = req.params;
+        const cart = await cartManager.removeOneProduct(cid, iid);
+        res.status(200).json({ status: "success", payload: cart });
+    } catch (error) {
+        res.status(error.code || 500).json({ status: "error", message: error.message });
+    }
+});
+
+// Ruta para quitar todos los productos de un carrito por su ID
+router.delete("/:cid/products", async (req, res) => {
+    try {
+        const { cid } = req.params;
+        const cart = await cartManager.removeAllProducts(cid);
         res.status(200).json({ status: "success", payload: cart });
     } catch (error) {
         res.status(error.code || 500).json({ status: "error", message: error.message });

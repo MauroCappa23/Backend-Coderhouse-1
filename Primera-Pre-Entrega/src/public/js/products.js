@@ -1,20 +1,12 @@
-const productList = document.getElementById("product-list");
-const btnRefreshList = document.getElementById("btn-refresh-product-list");
+const inputCartId = document.getElementById("cart-id");
 
-const loadProducts = async () => {
-    const response = await fetch("api/products", { method: "GET"});
-    const data = await response.json();
-    const products = data.payload.docs ?? [];
-
-    productList.innerText = "";
-
-    products.forEach((product) => {
-        productList.innerHTML += `<li>Id: ${product.id} - Name: ${product.title}</li>`
-    });
+const addProduct = async (productId) => {
+    const cartId = inputCartId.value;
+    await fetch(`/api/carts/${cartId}/products/${productId}`, { method: "POST" });
 };
 
-btnRefreshList.addEventListener("click", () => {
-    loadProducts();
-});
-
-loadProducts();
+const removeProduct = async (productId) => {
+    const cartId = inputCartId.innerText;
+    await fetch(`/api/carts/${cartId}/products/${productId}`, { method: "DELETE" });
+    window.location.reload();
+};

@@ -1,45 +1,82 @@
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
-header {
-    color: rgb(27, 115, 174);
-    display: flex;
-    justify-self: center;
+a {
+  text-decoration: none;
 }
 
+h1 {
+  color: brown;
+}
 
 .error404 {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .error404 img {
-    width: 400px;
+  width: 400px;
 }
 
-form {
-    width: 100%;
-    max-width: 400px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: whitesmoke;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
+.products {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 600px;
+}
 
-  .form{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
+.products__box {
+  height: 255px;
+  width: 600px;
+  border: 1px solid black;
+}
 
-  .form-title{
-    align-self: center;
-  }
+.products__box__list {
+  list-style-position: inside;
+  padding: 0;
+  margin: 0.25rem;
+}
 
-.error-message{
-    color: red;
+.products__box__list__item {
+  display: flex;
+  gap: 10px;
+  height: 25px;
+}
+
+.products__box__list__item__text {
+  width: 480px;
+
+  /* Implementación de Ellipsis (...) */
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.products__pagination {
+  display: flex;
+  gap: 10px;
+}
+
+.products__form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 600px;
+}
+
+.products__delete {
+  display: flex;
+  gap: 0.5rem;
+  width: 600px;
+}
+
+.products__delete__input {
+  width: 100%;
+}
+
+.error-message {
+  color: brown;
 }

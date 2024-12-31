@@ -30,7 +30,8 @@ export default class ProductManager {
         try {
             const $and = [];
 
-            if (params?.title) $and.push({ title: { $regex: params.title, $options: "i" } });
+            if (params?.category) $and.push({ category: params.category.trim().toUpperCase() });
+            if (params?.availability) $and.push({ availability: convertToBoolean(params.availability) });
             const filters = $and.length > 0 ? { $and } : {};
 
             const sort = {
@@ -54,7 +55,8 @@ export default class ProductManager {
     // Obtiene un producto específico por su ID
     async getOneById(id) {
         try {
-            return await this.#findOneById(id);
+            const product =  await this.#findOneById(id);
+            return product.toObject();
         } catch (error) {
             throw ErrorManager.handleError(error);
         }
@@ -66,6 +68,7 @@ export default class ProductManager {
             const product = await this.#productModel.create({
                 ...data,
                 status: convertToBoolean(data.status),
+                availability: convertToBoolean(data.availability),
             });
 
             return product;
@@ -82,6 +85,7 @@ export default class ProductManager {
                 ...product,
                 ...data,
                 status: data.status ? convertToBoolean(data.status) : product.status,
+                availability: data.availability ? convertToBoolean(data.availability) : product.availability,
             };
 
             product.set(newValues);
